@@ -1,0 +1,65 @@
+from collections import deque
+
+# Function to perform breadth-first search
+def bfs(start, end, jug1_cap, jug2_cap):
+    queue = deque([(0, 0, 0)])  # Queue for BFS, (x, y, z) where x is the level, y is jug1, z is jug2
+    visited = set()  # Set to keep track of visited states
+
+    while queue:
+        level, jug1, jug2 = queue.popleft()
+
+        if jug1 == end or jug2 == end:
+            return level
+
+        # Fill jug1
+        if (jug1 < jug1_cap) and ((jug1 + jug2) > jug1_cap) and ((jug1_cap, jug2) not in visited):
+            queue.append((level + 1, jug1_cap, jug2))
+            visited.add((jug1_cap, jug2))
+
+        # Fill jug2
+        if (jug2 < jug2_cap) and ((jug1 + jug2) > jug2_cap) and ((jug1, jug2_cap) not in visited):
+            queue.append((level + 1, jug1, jug2_cap))
+            visited.add((jug1, jug2_cap))
+
+        # Empty jug1
+        if (jug1 > 0) and ((jug1, 0) not in visited):
+            queue.append((level + 1, 0, jug2))
+            visited.add((jug1, 0))
+
+        # Empty jug2
+        if (jug2 > 0) and ((0, jug2) not in visited):
+            queue.append((level + 1, jug1, 0))
+            visited.add((0, jug2))
+
+        # Pour water from jug1 to jug2
+        if (jug1 > 0) and ((jug1 + jug2) <= jug2_cap) and ((0, jug1 + jug2) not in visited):
+            queue.append((level + 1, 0, jug1 + jug2))
+            visited.add((0, jug1 + jug2))
+
+        # Pour water from jug2 to jug1
+        if (jug2 > 0) and ((jug1 + jug2) <= jug1_cap) and ((jug1 + jug2, 0) not in visited):
+            queue.append((level + 1, jug1 + jug2, 0))
+            visited.add((jug1 + jug2, 0))
+
+    return -1
+
+# Main function
+def main():
+    jug1_cap = int(input("Enter the capacity of jug 1: "))
+    jug2_cap = int(input("Enter the capacity of jug 2: "))
+    end = int(input("Enter the desired amount of water: "))
+
+    if jug1_cap < 1 or jug2_cap < 1 or end < 1 or end > max(jug1_cap, jug2_cap):
+        print("Invalid input. Capacity and desired amount must be positive integers.")
+        return
+
+    start = (0, 0, 0)  # Starting state (level, jug1, jug2)
+    steps = bfs(start, end, jug1_cap, jug2_cap)
+
+    if steps != -1:
+        print(f"Minimum number of steps required: {steps}")
+    else:
+        print("Solution not possible.")
+
+if __name__ == "__main__":
+    main()
