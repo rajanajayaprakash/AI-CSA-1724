@@ -1,0 +1,31 @@
+class VacuumCleaner:
+    def __init__(self, initial_state):
+        self.state = initial_state
+
+    def clean(self):
+        cleaned_locations = []
+        for location, status in self.state.items():
+            if status == "Dirty":
+                print(f"Cleaning {location}")
+                cleaned_locations.append(location)
+        for location in cleaned_locations:
+            self.state[location] = "Clean"
+
+# Main function
+def main():
+    # Initial state of the environment
+    initial_state = {"Living Room": "Dirty", "Kitchen": "Clean", "Bedroom": "Dirty", "Bathroom": "Clean"}
+
+    # Create a VacuumCleaner object with the initial state
+    vacuum_cleaner = VacuumCleaner(initial_state)
+
+    # Perform cleaning
+    vacuum_cleaner.clean()
+
+    # Print final state of the environment
+    print("Final state of the environment:")
+    for location, status in vacuum_cleaner.state.items():
+        print(f"{location}: {status}")
+
+if __name__ == "__main__":
+    main()
