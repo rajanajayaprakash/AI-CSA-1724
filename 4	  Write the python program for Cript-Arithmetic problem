@@ -1,0 +1,31 @@
+from itertools import permutations
+
+def solve_cryptarithmetic(puzzle):
+    # Split the puzzle into words
+    words = puzzle.split()
+
+    # Get unique characters in the puzzle
+    unique_chars = set(''.join(words))
+
+    # Generate all possible permutations of digits 0 to 9 for unique characters
+    for perm in permutations('0123456789', len(unique_chars)):
+        # Map each character to a digit
+        mapping = dict(zip(unique_chars, perm))
+
+        # Check if the mapping satisfies the puzzle
+        if all(int(''.join(mapping[char] for char in word if char in mapping)) != 0 for word in words) and \
+                sum(int(''.join(mapping[char] for char in word if char in mapping)) for word in words[:-1]) == \
+                int(''.join(mapping[char] for char in words[-1] if char in mapping)):
+            return mapping
+
+    return None
+
+# Test the function
+puzzle = "SEND + MORE = MONEY"
+solution = solve_cryptarithmetic(puzzle)
+if solution:
+    print("Solution found:")
+    for char, digit in solution.items():
+        print(f"{char}: {digit}")
+else:
+    print("No solution found.")
