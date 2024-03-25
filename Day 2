@@ -1,67 +1,50 @@
-import heapq
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 5)
 
-class Node:
-    def __init__(self, x, y, obstacle=False):
-        self.x = x
-        self.y = y
-        self.obstacle = obstacle
-        self.g = float('inf')
-        self.h = float('inf')
-        self.f = float('inf')
-        self.parent = None
+def check_winner(board, player):
+    for row in board:
+        if all(cell == player for cell in row):
+            return True
 
-    def __lt__(self, other):
-        return self.f < other.f
+    for col in range(3):
+        if all(board[row][col] == player for row in range(3)):
+            return True
 
-def heuristic(node, goal):
-    return abs(node.x - goal.x) + abs(node.y - goal.y)
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+        return True
 
-def astar(grid, start, goal):
-    open_set = []
-    closed_set = set()
+    return False
 
-    start.g = 0
-    start.h = heuristic(start, goal)
-    start.f = start.h
-    heapq.heappush(open_set, start)
+def play_game():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    players = ["X", "O"]
+    current_player = 0
 
-    while open_set:
-        current = heapq.heappop(open_set)
+    while True:
+        print_board(board)
+        row = int(input(f"Player {players[current_player]}, enter row number (0-2): "))
+        col = int(input(f"Player {players[current_player]}, enter column number (0-2): "))
 
-        if current == goal:
-            path = []
-            while current:
-                path.append((current.x, current.y))
-                current = current.parent
-            return path[::-1]
+        if board[row][col] != " ":
+            print("That position is already taken. Try again.")
+            continue
 
-        closed_set.add(current)
+        board[row][col] = players[current_player]
 
-        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            x, y = current.x + dx, current.y + dy
-            if 0 <= x < len(grid) and 0 <= y < len(grid[0]) and not grid[x][y].obstacle:
-                neighbor = grid[x][y]
-                if neighbor in closed_set:
-                    continue
-                tentative_g = current.g + 1
-                if tentative_g < neighbor.g:
-                    neighbor.parent = current
-                    neighbor.g = tentative_g
-                    neighbor.h = heuristic(neighbor, goal)
-                    neighbor.f = neighbor.g + neighbor.h
-                    heapq.heappush(open_set, neighbor)
+        if check_winner(board, players[current_player]):
+            print_board(board)
+            print(f"Player {players[current_player]} wins!")
+            break
 
-    return None
+        if all(all(cell != " " for cell in row) for row in board):
+            print_board(board)
+            print("It's a tie!")
+            break
 
-# Example usage
-grid = [[Node(x, y) for y in range(5)] for x in range(5)]
-grid[1][2].obstacle = True
-grid[2][2].obstacle = True
-start = grid[0][0]
-goal = grid[4][4]
-path = astar(grid, start, goal)
+        current_player = 1 - current_player
 
-if path:
-    print("Path found:", path)
-else:
-    print("No path found")
+if __name__ == "__main__":
+    play_game()
+
