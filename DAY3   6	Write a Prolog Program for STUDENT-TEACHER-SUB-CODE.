@@ -1,0 +1,13 @@
+teaches_subject(teacher1, math).
+teaches_subject(teacher2, science).
+teaches_subject(teacher3, english).
+
+student_subject(student1, math).
+student_subject(student1, science).
+student_subject(student2, english).
+
+teaches_student(T, S) :- teaches_subject(T, Sub), student_subject(S, Sub).
+
+% Example usage:
+% To find teachers who teach a specific student
+% ?- teaches_student(Teacher, student1).
