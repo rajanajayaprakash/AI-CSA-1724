@@ -1,0 +1,27 @@
+% Symptoms for different diseases
+symptom(fever, malaria).
+symptom(cough, cold).
+symptom(rash, allergy).
+symptom(fever, flu).
+symptom(cough, flu).
+symptom(weakness, flu).
+symptom(cough, pneumonia).
+symptom(fever, pneumonia).
+symptom(shortness_of_breath, pneumonia).
+symptom(fever, covid_19).
+symptom(cough, covid_19).
+symptom(shortness_of_breath, covid_19).
+symptom(loss_of_taste, covid_19).
+symptom(loss_of_smell, covid_19).
+
+% Rules for diagnosis
+diagnosis(Patient, Disease) :-
+    findall(Symptom, (symptom(Symptom, Disease), has_symptom(Patient, Symptom)), Symptoms),
+    length(Symptoms, SymptomCount),
+    findall(Symptom, has_symptom(Patient, Symptom), AllSymptoms),
+    length(AllSymptoms, AllSymptomCount),
+    SymptomCount > 0,
+    SymptomCount == AllSymptomCount.
+
+% Example usage:
+% ?- diagnosis(john, flu).
