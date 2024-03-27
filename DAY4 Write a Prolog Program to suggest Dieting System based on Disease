@@ -1,0 +1,25 @@
+% Foods for different diets
+food(apple, balanced_diet).
+food(banana, balanced_diet).
+food(chicken, high_protein).
+food(fish, high_protein).
+food(broccoli, high_fiber).
+food(oatmeal, high_fiber).
+food(cake, high_sugar).
+food(candy, high_sugar).
+food(salad, low_calorie).
+food(soup, low_calorie).
+
+% Diet suggestions for diseases
+diet_suggestion(balanced_diet, diabetes).
+diet_suggestion(high_protein, weight_loss).
+diet_suggestion(high_fiber, constipation).
+diet_suggestion(high_sugar, obesity).
+diet_suggestion(low_calorie, weight_loss).
+
+% Rule to suggest a diet for a disease
+suggest_diet(Disease, Diet) :-
+    diet_suggestion(Diet, Disease).
+
+% Example usage:
+% ?- suggest_diet(diabetes, Diet).
